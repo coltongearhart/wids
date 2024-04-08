@@ -1,0 +1,4 @@
+- source: wids.qmd
+  quarto-pub:
+    - id: d501b662-3006-4b89-b08d-7005bea01092
+      url: 'https://coltongearhart.quarto.pub/wids-data-viz'

@@ -1,0 +1,402 @@
+---
+title: "Data Exploration and Visualization"
+subtitle: "WiDS Muncie @ Ball State University"
+title-slide-attributes:
+  data-background-image: images/bsu-campus.png
+  data-background-opacity: "0.2"
+date: 04/25/2024
+author: Colton Gearhart & Dr. Aihua Li
+format: 
+  revealjs:
+    slide-number: true
+    width: 1920
+    height: 1080
+    logo: "images/logo-wids-vertical.png"
+css: style.css
+editor: source
+---
+
+## What, why, and how data viz?
+
+. . .
+
+What is Data Viz?
+
+- **Data visualization** is the process of creating effective visuals to display complex trends in data
+
+. . .
+
+Why Data Viz?
+
+- Exploring to find trends \hspace{20pt} or \hspace{20pt} Explaining a research question
+
+. . .
+
+How Data Viz?
+
+- Software + Design + Narrative = Storytelling with Data
+
+## What, why, and how data viz?
+
+![](images/venn-diagram-dataviz.png){width="50%"}
+
+::: aside
+https://www.juiceanalytics.com/writing/5-differences-between-data-exploration-and-data-presentation
+:::
+
+## Data viz product lifecycle
+
+![](images/dataviz-lifecycle.png){width="50%"}
+
+## Data viz and data science
+
+![](images/data-science-project-workflow.png){width="50%"}
+
+## Data viz and R
+
+This presentation introduces the world of **ggplot2**, several different types of plots, and some basic features to enhance your visuals. Then it covers simple data visualization principles when working with multiple variables and how to implement these within **ggplot2**.
+
+::: columns
+::: {.column width="50%"}
+
+![](images/logo-r.png)
+:::
+
+::: {.column width="50%"}
+
+![](images/ggplot.png)
+:::
+:::
+
+## Prerequisites
+
+Before we can use the functions, datasets, and help pages within the **tidyverse**, which includes ggplot2, we need to load the package. We can do this by running:
+
+```{r}
+#| echo: true
+
+library(tidyverse)
+```
+
+Note if any package is not currently installed, it cannot be loaded. We can install packages using the 'Packages' tab or by running:
+
+```{r}
+#| echo: true
+#| eval: FALSE
+
+install.packages("tidyverse")
+```
+
+![](images/install-tidyverse.png)
+
+## Example dataset
+
+-   We are going to use `diamonds` dataset from **ggplot2** package, aka `ggplot2::diamonds` (this is the syntax for denoting which package a function or dataset comes from `packagename::functionname()`). This contains price and other attribute information about a large sample of diamonds.
+
+-   You can search a function or dataset name in the 'Help' tab or run `?< function or dataset >` to bring up the documentation.
+
+```{r diamonds-help}
+?diamonds
+```
+
+## Example dataset
+
+-   To preview the dataset, we can click on it in the 'Environment' tab or run `glimpse()`, which shows a better formatted preview than the standard `print()` function.
+
+-   Displayed results compactly show the number of observations, the number of variables and their corresponding data types and also some of the raw data.
+
+::: columns
+::: {.column width="50%"}
+
+```{r}
+#| echo: true
+#| eval: false
+
+glimpse(diamonds)
+```
+:::
+
+::: {.column width="50%"}
+
+![](images/diamonds-data.png)
+:::
+:::
+
+## ggplot2 basics and scatterplots
+
+> Building from scratch
+
+-   All plots follow a similar structure that builds up from the `ggplot()` function.
+
+-   And the first thing we can do is specify the dataset we will be using.
+
+```{r}
+#| echo: true
+#| output-location: column
+
+ggplot(data = diamonds)
+```
+
+-   Now it is primed with the data, but we haven't told it to do anything.
+
+## ggplot2 basics and scatterplots
+
+> Aesthetic mapping
+
+-   Next, we can add a layer of geometric features with `geom_*()`. This uses uses **aesthetic mapping**, which takes values of a variable and translates them into a visual feature.
+
+-   Choice of geometry depends on the data types. `carat` and `price` are continuous $\Longrightarrow$ scatterplot via `geom_point()`.
+
+-   Use `aes()` function to tell R the attributes are from the specified dataset and use `+` between ggplot2 functions to add **layers**.
+
+```{r}
+#| echo: true
+#| code-line-numbers: 1-4|1|2-3|4
+#| output-location: column
+
+ggplot(data = diamonds,
+       aes(x = carat,
+           y = price)) +
+  geom_point()
+```
+
+## ggplot2 basics and scatterplots
+
+> Other attributes
+
+- Now we can adapt the scatterplot from before to learn more about function structure.
+
+-   Anything that is a *simple "constant" value* (i.e. not part of the data and just an option for visual look) should be specified *locally* and *outside* of the `aes()` function.
+
+```{r}
+#| echo: true
+#| code-line-numbers: 1-4|4
+#| output-location: column
+
+ggplot(data = diamonds,
+       aes(x = carat,
+           y = price)) + 
+  geom_point(color = "purple")
+```
+
+## ggplot2 basics and scatterplots {.scrollable}
+
+> Incorporating more variables via aes()
+
+-   Only *data-driven attributes* go inside the `aes()` function.
+
+-   To see how this works, let's take a look at the `iris` dataset.
+
+```{r}
+#| echo: true
+#| code-line-numbers: 1-2|1|2
+#| output-location: column
+
+# preview data
+print(iris)
+
+```
+
+```{r}
+#| echo: true
+#| code-line-numbers: 1-7|2|3-5|6-7
+#| output-location: column
+
+# create scatterplot
+ggplot(data = iris,
+       aes(x = Sepal.Length,
+           y = Sepal.Width,
+           color = Species)) + 
+  geom_point(size = 10,
+             shape = "*")
+```
+
+## Histograms  {.scrollable}
+
+> geom_histogram()
+
+-   A basic **histogram** is a *univariate* plot that can be used for *continuous* variables and is created via `geom_histogram()`.
+
+-   Pay close attention to the how wide the intervals are on histograms.
+
+```{r}
+#| echo: true
+#| code-line-numbers: 1-6|3|4|5-6
+#| output-location: column
+
+# create histogram with certain width and colors
+ggplot(data = diamonds,
+       aes(x = carat)) + 
+  geom_histogram(bins = 5,
+                 fill = "red",
+                 color = "black")
+```
+
+```{r}
+#| echo: true
+#| code-line-numbers: 1-6|4
+#| output-location: column
+
+# create histogram with certain width and colors
+ggplot(data = diamonds,
+       aes(x = carat)) + 
+  geom_histogram(binwidth = 0.1,
+                 fill = "red",
+                 color = "black")
+```
+
+## Titles, labels and themes
+
+-   Use the `labs()` function to adds main titles, axis titles, etc. These labels can be tacked onto any ggplot2 plot.
+
+- Themes can be added via `theme_*()`.
+
+```{r}
+#| echo: true
+#| code-line-numbers: 1-10|7-9|10
+#| output-location: column
+
+# add features to polish plot
+ggplot(data = diamonds,
+       aes(x = carat)) + 
+  geom_histogram(binwidth = 0.1,
+                 fill = "red",
+                 color = "black") + 
+  labs(title = "Histogram of diamond weights",
+       x = "Weight in carats",
+       y = "Count") + 
+  theme_bw()
+```
+
+## Boxplots {.scrollable}
+
+> boxplot() and geom_boxplot()
+
+-   Boxplots are another common plot, which are used to visualize the distribution of a *numeric* variable. However, they no longer map the raw data.
+
+-   Instead, `boxplot()` and `geom_boxplot()` map the five number summary that is computed from the raw data.
+
+```{r}
+#| echo: true
+#| code-line-numbers: 1-5|2|5
+#| output-location: column
+
+# generate and save set of random numbers
+x <- rnorm(50)
+
+# summarize numbers
+summary(x)
+```
+
+```{r}
+#| echo: true
+#| code-line-numbers: 1-2|2
+#| output-location: column
+
+# visualize numbers
+boxplot(x, horizontal = TRUE)
+```
+
+```{r}
+#| echo: true
+#| code-line-numbers: 1-2|2
+#| output-location: column
+
+# base R histogram
+hist(x)
+```
+
+## Boxplots
+
+> Comparitive boxplots
+
+-   `geom_boxplot()` requires a continuous variable to be mapped to either the `x` or `y` argument.
+
+-   We can also make comparative (side-by-side) boxplots by mapping a categorical variable to the other axis.
+
+```{r}
+#| echo: true
+#| code-line-numbers: 1-5|3-4|5
+#| output-location: column
+
+# create comparative boxplots
+ggplot(data = diamonds,
+aes(x = carat,
+    y = cut)) + 
+  geom_boxplot()
+```
+
+-   This is one way to plot a numerical response with a categorical explanatory variable.
+
+## Bar graphs
+
+> geom_bar()
+
+-   A bar graph (also known as bar chart or bar plot) is used for *categorical* data and assigns a height of a bar to the count of a group.
+
+-   Bargraphs plot a summary of the data, specifically the frequency (or relative frequency = frequency / total).
+
+-   If we have raw data (not already summarized), then we can use `geom_bar()` without any options.
+
+```{r}
+#| echo: true
+#| code-line-numbers: 1-4|3|4
+#| output-location: column
+
+# create bar graph
+ggplot(data = diamonds,
+       aes(x = cut)) + 
+  geom_bar()
+```
+
+## What is possible with the basic skills?
+
+-   With just the necessities of ggplot2 and R, you can make very informative, professional plots!
+
+-   There are lots of other cool functions and other types of plots that we did not cover, such as `geom_line()`, `facet_wrap()`, etc. 
+
+:::: columns
+::: {.column width="40%"}
+
+```{r}
+#| echo: true
+#| eval: false
+
+# line plot of points over the season
+# -> specific colors by W/L and also take into account location with facets
+# -> add reference line for average points
+ggplot(data = data_bsu_plot,
+       aes(x = Date,
+           y = Points)) +  
+  geom_point(aes(color = Outcome),
+             size = 4) + 
+  geom_line(color = "lightgrey") + 
+  geom_hline(aes(yintercept = mean(Points)),
+             color = "grey20",
+             linetype = "dashed") + 
+  scale_color_manual(values = c("L" = "red", "W" = "green")) + 
+  facet_wrap(~ Location) + 
+  labs(title = "Ball State Basketball 2012-13") + 
+  theme_bw()
+```
+
+:::
+::: {.column width="60%"}
+
+![](images/bsu-basketball.png)
+
+:::
+:::
+
+## Additional Resources
+
+- If you want to learn more about data visualization and/or R specifically, check out the following resources!
+
+![](images/texts-swd-r4ds.png){width=50%}
+
+
+## Thanks for listening! {background-image="images/beneficence.png" background-opacity=0.2}
+
+[https://coltongearhart.quarto.pub/wids-data-viz/]()
+
+![](images/wids-logo-horizontal.png){width="50%"}

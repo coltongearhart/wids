@@ -1,0 +1,26 @@
+.title {
+  font-size: 120px !important;
+  color: red !important;
+}
+
+.subtitle {
+  font-size: 80px !important;
+  color: black !important;
+}
+
+.quarto-title-author-name {
+  font-size: 60px;
+  color: black !important;
+}
+
+.date {
+  font-size: 60px;
+  color: black !important;
+}
+
+.reveal .slide-logo {
+  height: 100px !important;
+  width: 82px !important;
+  max-width: unset !important;
+  max-height: unset !important;
+}
