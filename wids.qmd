@@ -52,6 +52,10 @@ https://www.juiceanalytics.com/writing/5-differences-between-data-exploration-an
 
 ![](images/data-science-project-workflow.png){width="50%"}
 
+::: aside
+https://r4ds.hadley.nz/whole-game
+:::
+
 ## Data viz and R
 
 This presentation introduces the world of **ggplot2**, several different types of plots, and some basic features to enhance your visuals. Then it covers simple data visualization principles when working with multiple variables and how to implement these within **ggplot2**.
@@ -66,6 +70,10 @@ This presentation introduces the world of **ggplot2**, several different types o
 
 ![](images/ggplot.png)
 :::
+:::
+
+::: aside
+https://posit.co/download/rstudio-desktop/ and https://ggplot2.tidyverse.org/
 :::
 
 ## Prerequisites
