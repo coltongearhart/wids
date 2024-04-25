@@ -5,7 +5,7 @@ title-slide-attributes:
   data-background-image: images/bsu-campus.png
   data-background-opacity: "0.2"
 date: 04/25/2024
-author: Colton Gearhart & Dr. Aihua Li
+author: Colton Gearhart
 format: 
   revealjs:
     slide-number: true
